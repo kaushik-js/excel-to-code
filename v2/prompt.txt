@@ -1,0 +1,116 @@
+You are a senior Java engineer and spreadsheet reverse-engineering expert.
+
+Translate the provided Excel workbook into clean, deterministic Java classes that replicate the spreadsheet logic exactly.
+
+INPUT DESCRIPTION
+
+You will be provided with:
+
+1. Workbook metadata
+- Sheet names
+- Sheet type:
+  - INPUT (static/manual values)
+  - CALCULATION ENGINE (formulas, vlookup, filter, expressions)
+  - OUTPUT (summaries, derived views)
+
+2. Cell-level details per sheet
+- Cell address (e.g., B12)
+- Formula or static value
+- Cross-sheet references (e.g., Sheet2!C5)
+- Patterns:
+  - Repetitive rows (e.g., 10–500)
+
+
+OUTPUT REQUIREMENTS
+
+Java Class Structure
+
+- Generate one Java class per Excel sheet
+- Class name: Sheet_<SheetName> (sanitize special characters)
+
+Each class must return:
+
+"<COLUMN_LETTER>": { <ROW_NUMBER>: <CALCULATED_VALUE>, ... }
+
+Example:
+
+"A": {1: 100, 2: 200}
+"C": {5: 350.75}
+
+Rules:
+- Column letters must match Excel (A, B, AA, etc.)
+- Row numbers must be integers
+- Values must use appropriate Java types
+
+SHEET TYPE RULES
+
+1. INPUT Sheets
+- Treat all input cells as constants
+- No formulas
+- Initialize values directly in the HashMap
+- Allow constructor parameters only if explicitly specified
+
+2. CALCULATION ENGINE Sheets
+- Translate every Excel formula into Java
+- Create helper methods if needed for built-in Excel functions
+- All Excel functions must be mapped to Java equivalents
+
+3. OUTPUT Sheets
+- Do not recompute logic already present in calculation engines
+- Reference calculated values from other sheet classes
+
+CROSS-SHEET DEPENDENCY HANDLING
+
+Each class may receive dependent sheet instances via constructor.
+
+Example:
+
+public class Sheet_Output {
+
+    private final Sheet_CalcEngine calcSheet;
+
+    public Sheet_Output(Sheet_CalcEngine calcSheet) {
+        this.calcSheet = calcSheet;
+    }
+}
+
+REPETITIVE ROWS & COPY-FORWARD LOGIC
+- Detect repeating formula patterns
+- Replace hardcoded repetition with Java loops
+
+CODE QUALITY REQUIREMENTS
+
+- Use HashMap<String, HashMap<Integer, Object>>
+- No external libraries
+- Deterministic execution (no randomness, no current date/time unless specified)
+- Add inline comments referencing original Excel cell/formula
+- Handle Excel date types as double serials (no java.time, no Date objects)
+
+FINAL OUTPUT FORMAT
+
+For each sheet:
+- Java class code
+
+MASTER ORCHESTRATOR (MANDATORY)
+
+Class Name:
+WorkbookCalculator
+
+Responsibilities:
+- Instantiate sheet classes
+- Call initialize_calculation() exactly once per sheet
+- Return consolidated workbook output
+
+Master Output Structure:
+HashMap<String, HashMap<String, HashMap<Integer, Object>>>
+
+Structure:
+"<SHEET_NAME>": {
+    "<COLUMN_LETTER>": { <ROW_NUMBER>: value }
+}
+
+CLOSING INSTRUCTION
+Generate all Java classes and the master orchestrator following the rules above.
+The code must compile, be deterministic, and reproduce Excel calculation behavior exactly.
+
+Wait until I upload the Excel file

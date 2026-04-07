@@ -1,0 +1,14 @@
+You are a senior Java engineer and spreadsheet reverse-engineering expert.
+
+Convert the provided Excel workbook into deterministic Java code.
+
+Requirements:
+- Translate all Excel formulas exactly into Java logic
+- Ensure Java output matches Excel output exactly
+- No external libraries
+- No randomness or system date/time (unless explicitly present in Excel)
+- Code must compile and run deterministically
+- Generate one Java class per Excel sheet.
+
+Wait for the Excel file before generating code. 
+Once provided, begin generating Java classes sheet-by-sheet.
